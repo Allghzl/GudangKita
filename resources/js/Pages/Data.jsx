@@ -2,8 +2,11 @@ import { Link, Head } from "@inertiajs/react";
 import Sidebar from "@/Components/Sidebar";
 import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
-import edit from "../Components/Inventaris/edit.svg";
-import icons from "../Components/Inventaris/icons.svg";
+import edit from "../Components/Icon/edit.svg";
+import icons from "../Components/Icon/icons.svg";
+import productimage from "../Components/Icon/productimage.png";
+import grid from "../Components/Icon/grid.png";
+import row from "../Components/Icon/row.png";
 
 export default function Data(props) {
     const [query, setQuery] = useState("");
@@ -18,6 +21,15 @@ export default function Data(props) {
     const handleSearch = () => {
         console.log("Mencari:", query);
     };
+    const [isChecked, setIsChecked] = useState(false)
+    const [Table, setTable] = useState(false)
+    const [Grid, setGrid] = useState(true)
+
+    const handleCheckboxChange = () => {
+        setIsChecked(!isChecked)
+        setTable(!Table)
+        setGrid(!Grid)
+    }
 
     const [namabarang, setName] = useState("");
     const [kategori, setCategory] = useState("");
@@ -46,7 +58,6 @@ export default function Data(props) {
         setNewKategori(normalizedValue);
         setCategory(normalizedValue);
     };
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!namabarang || (!kategori && !newKategori) || !stok || !lokasi) {
@@ -76,8 +87,38 @@ export default function Data(props) {
                     <div className="sm:flex gap-4 items-center sm:justify-between">
                         <input type="text" value={query} placeholder="Cari barang..." onChange={handleInputChange} className="input input-bordered border-gray-600 sm:w-64 w-full bg-white mb-4 sm:mb-0" />
                     </div>
-                    <button className="btn border-none right-auto bg-blue-600 hover:bg-blue-700 text-white" onClick={()=>document.getElementById('addItem').showModal()}>Tambahkan Barang +</button>
+                    <div className="flex gap-4 justify-between items-center">
+                        <label className='shadow-card relative inline-flex cursor-pointer select-none items-center justify-center rounded-md bg-white p-1'>
+                            <input
+                            type='checkbox'
+                            className='sr-only'
+                            checked={isChecked}
+                            onChange={handleCheckboxChange}
+                            />
+                            <span
+                            className={`flex items-center space-x-[6px] rounded py-2 px-[18px] text-sm font-medium ${
+                                !isChecked ? 'text-primary bg-[#f4f7ff]' : 'text-body-color'
+                            }`}
+                            >
+                            <img src={grid} className={`size-4 mr-2 grayscale ${
+                                !isChecked ? `grayscale-0` : `grayscale`}`}></img>
+                            Grid
+                            </span>
+                            <span
+                            className={`flex items-center space-x-[6px] rounded py-2 px-[18px] text-sm font-medium ${
+                                isChecked ? 'text-primary bg-[#f4f7ff]' : 'text-body-color'
+                            }`}
+                            >
+                                <img src={row} className={`size-4 mr-2 grayscale ${
+                                isChecked ? `grayscale-0` : `grayscale`}`}></img>
+                            Table
+                            </span>
+                        </label>
+                        <button className="btn border-none right-auto bg-blue-600 hover:bg-blue-700 text-white" onClick={()=>document.getElementById('addItem').showModal()}>Tambahkan Barang +</button>
+                    </div>
                 </div>
+            
+            {Table &&
                 <div className="overflow-x-auto p-4 bg-white rounded-md text-black">
                     <table className="table">
                         <thead className="text-black text-base">
@@ -94,9 +135,10 @@ export default function Data(props) {
                             {props.items && props.items.length > 0 ? props.items.map((data, i) => (
                                 <tr key={i} className="">
                                     <td></td>
-                                    <td className="font-bold">{data.namabarang}</td>
-                                    <td>{data.kategori}</td>
-                                    <td>{data.stok}</td><td>{data.lokasi}</td>
+                                    <td className="font-bold">{data.namabarang.length > 15 ? data.namabarang.slice(0, 15)+"..": data.namabarang}</td>
+                                    <td>{data.kategori.length > 15 ? data.kategori.slice(0, 15)+"..": data.kategori}</td>
+                                    <td>{data.stok.length > 5 ? data.stok.slice(0, 5)+"..": data.stok}</td>
+                                    <td>{data.lokasi.length > 15 ? data.lokasi.slice(0, 15)+"..": data.lokasi}</td>
                                     <td className="flex gap-2">
                                         <Link href={route("edit.item", {id: data.id})} as="button" method="get" data={{ id: data.id }} className="btn btn-warning btn-sm"><img src={edit} className="w-6 h-6" /></Link>
                                         <Link href={route("delete.item" )} as="button" method="post" data={{id: data.id}} className="btn btn-error btn-sm"><img src={icons} className="w-6 h-6"/></Link>
@@ -117,7 +159,33 @@ export default function Data(props) {
                             </tr>
                         </tfoot>
                     </table>
-                </div>
+                </div>}
+                {Grid && 
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center m-2">
+                {props.items && props.items.length > 0 ? props.items.map((data, i) => (               
+                    <div key={i} className="card card-compact bg-blue-500 w-auto shadow-xl">
+                        <figure>
+                            <img
+                            src={productimage}
+                            alt="product.image" />
+                        </figure>
+                        <div className="card-body text-white">
+                            <h2 className="card-title">{data.namabarang.length > 20 ? data.namabarang.slice(0, 20)+"..": data.namabarang}</h2>
+                            <div className="card-subtitle">
+                            <p>Stok: {data.stok.length > 10 ? data.stok.slice(0, 10)+"..": data.stok}</p>
+                            <p>Lokasi: {data.lokasi.length > 15 ? data.lokasi.slice(0, 15)+"..": data.lokasi}</p>
+                            </div>
+                            <div className="card-actions justify-between items-center">
+                                <div className="badge badge-outline">{data.kategori.length > 15 ? data.kategori.slice(0, 15)+"..": data.kategori }</div>
+                                <div className="flex gap-2 justify-end"> 
+                                <Link href={route("edit.item", {id: data.id})} as="button" method="get" data={{ id: data.id }} className="btn btn-warning btn-sm"><img src={edit} className="w-6 h-6" /></Link>
+                                <Link href={route("delete.item" )} as="button" method="post" data={{id: data.id}} className="btn btn-error btn-sm"><img src={icons} className="w-6 h-6"/></Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )): <div className="text-center text-gray-500">Belum ada data</div>}
+                </div> }
 
                 <footer className="text-center mt-6 text-sm text-gray-500">Dibuat dengan ❤️ oleh Allghzl</footer>
 

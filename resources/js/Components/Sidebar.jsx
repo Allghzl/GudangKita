@@ -1,4 +1,4 @@
-import logo from "./Inventaris/logob.png";
+import logo from "./Icon/logob.png";
 import React from "react";
 import { Link } from "@inertiajs/react";
 const Sidebar = ({ children, user }) => {

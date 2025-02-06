@@ -1,7 +1,7 @@
 import Sidebar from "@/Components/Sidebar";
 import { Head, Link } from "@inertiajs/react";
-import bg from "../Components/Inventaris/bg.svg"
-import arrow from "../Components/Inventaris/arrow.svg"
+import bg from "../Components/Icon/bg.svg"
+import arrow from "../Components/Icon/arrow.svg"
 
 export default function Homepage(props) {
     console.log('props', props);

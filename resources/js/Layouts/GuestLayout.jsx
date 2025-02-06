@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
-import logo from '@/Components/Inventaris/logob.png';
-import bg from '@/Components/Inventaris/bg.svg';
+import logo from '@/Components/Icon/logob.png';
+import bg from '@/Components/Icon/bg.svg';
 
 export default function GuestLayout({ children }) {
     return (
